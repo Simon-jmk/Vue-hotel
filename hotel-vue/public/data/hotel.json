@@ -1,0 +1,131 @@
+{
+    "locations": [
+      {
+        "city": "Bangkok",
+        "description": "Huvudstaden i Thailand, känd för sin livliga atmosfär, kultur och moderna attraktioner.",
+        "hotels": [
+          {
+            "id": 1,
+            "name": "La Petite Salil Sukhumvit 11",
+            "description": "En lyxig anläggning i centrum av Bangkok.",
+            "image": "https://images.trvl-media.com/lodging/6000000/5320000/5311800/5311733/6428b678.jpg?impolicy=resizecrop&rw=1200&ra=fit",
+            "pricePerNight": 150,
+            "amenities": ["WiFi", "Pool", "Frukost", "Spa"],
+            "rating": 4.5,
+            "location": "Bangkok",
+            "availableRooms": 12,
+            "contact": "info@bangkokgrandhotel.com"
+          },
+          {
+            "id": 2,
+            "name": "Maimi Hotel",
+            "description": "Hotellet erbjuder fantastisk utsikt över Bangkok skyline.",
+            "image": "https://images.trvl-media.com/lodging/5000000/4710000/4705600/4705552/90275346.jpg?impolicy=resizecrop&rw=1200&ra=fit",
+            "pricePerNight": 120,
+            "amenities": ["WiFi", "Gym", "Frukost"],
+            "rating": 4.0,
+            "location": "Bangkok",
+            "availableRooms": 10,
+            "contact": "contact@siamtower.com"
+          },
+          {
+            "id": 3,
+            "name": "Icon Hotel",
+            "description": "En lugn oas vid floden Chao Phraya.",
+            "image": "https://images.trvl-media.com/lodging/9000000/8100000/8097000/8096911/d198a72e.jpg?impolicy=resizecrop&rw=1200&ra=fit",
+            "pricePerNight": 180,
+            "amenities": ["Pool", "Frukost", "Bar", "Utsikt"],
+            "rating": 4.7,
+            "location": "Bangkok",
+            "availableRooms": 8,
+            "contact": "booking@chaophrayaresort.com"
+          }
+        ]
+      },
+      {
+        "city": "Pattaya",
+        "description": "Känd för sina stränder, nattliv och vattensporter.",
+        "hotels": [
+          {
+            "id": 4,
+            "name": "Pattaya Beach Hotel",
+            "description": "Ett strandnära hotell med alla bekvämligheter.",
+            "image": "path_to_image_pattaya_1",
+            "pricePerNight": 130,
+            "amenities": ["WiFi", "Beachfront", "Frukost", "Restaurang"],
+            "rating": 4.3,
+            "location": "Pattaya",
+            "availableRooms": 15,
+            "contact": "reservations@pattayabeachhotel.com"
+          },
+          {
+            "id": 5,
+            "name": "Royal Pattaya Resort",
+            "description": "En exklusiv resort vid havet.",
+            "image": "path_to_image_pattaya_2",
+            "pricePerNight": 160,
+            "amenities": ["Spa", "Gym", "Utsikt"],
+            "rating": 4.8,
+            "location": "Pattaya",
+            "availableRooms": 6,
+            "contact": "info@royalpattayaresort.com"
+          },
+          {
+            "id": 6,
+            "name": "Sunset Bay Resort",
+            "description": "En avkopplande resort med vacker solnedgångsutsikt.",
+            "image": "path_to_image_pattaya_3",
+            "pricePerNight": 140,
+            "amenities": ["Pool", "WiFi", "Restaurang", "Frukost"],
+            "rating": 4.6,
+            "location": "Pattaya",
+            "availableRooms": 20,
+            "contact": "booking@sunsetbayresort.com"
+          }
+        ]
+      },
+      {
+        "city": "Phuket",
+        "description": "En tropisk paradisö känd för sina stränder och lyxiga resorts.",
+        "hotels": [
+          {
+            "id": 7,
+            "name": "Phuket Beachfront Resort",
+            "description": "Ett strandhotell med enastående utsikt och exklusiva faciliteter.",
+            "image": "path_to_image_phuket_1",
+            "pricePerNight": 200,
+            "amenities": ["Strand", "Pool", "Spa", "Restaurang"],
+            "rating": 4.9,
+            "location": "Phuket",
+            "availableRooms": 5,
+            "contact": "contact@phuketbeachfrontresort.com"
+          },
+          {
+            "id": 8,
+            "name": "Andaman Sea View Resort",
+            "description": "Resort med fantastisk utsikt över Andamansjön.",
+            "image": "path_to_image_phuket_2",
+            "pricePerNight": 220,
+            "amenities": ["Frukost", "Pool", "Bar", "Gym"],
+            "rating": 5.0,
+            "location": "Phuket",
+            "availableRooms": 10,
+            "contact": "info@andamanseaview.com"
+          },
+          {
+            "id": 9,
+            "name": "Phuket Luxury Villas",
+            "description": "Vackra privata villor med lyxiga bekvämligheter.",
+            "image": "path_to_image_phuket_3",
+            "pricePerNight": 350,
+            "amenities": ["Privat pool", "Frukost", "Spa", "Gym"],
+            "rating": 4.7,
+            "location": "Phuket",
+            "availableRooms": 3,
+            "contact": "reservations@phuketluxuryvillas.com"
+          }
+        ]
+      }
+    ]
+  }
+  
