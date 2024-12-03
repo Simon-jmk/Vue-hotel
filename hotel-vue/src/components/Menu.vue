@@ -15,7 +15,6 @@
   justify-content: center;
   background-color: #f4f4f4;
   padding: 10px;
-  border-radius: 8px;
   width: 100%;
 }
 
@@ -37,7 +36,6 @@
   color: #333;
   font-size: 16px;
   padding: 10px;
-  border-radius: 4px;
 }
 
 .menu li a:hover {
