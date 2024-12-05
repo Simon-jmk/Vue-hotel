@@ -1,6 +1,20 @@
-<script setup lang="ts">
-import HotelSearch from "./components/HotelSearch.vue";
-import Menu from "./components/Menu.vue";
+<script lang="ts">
+import { defineComponent, onMounted } from "vue";
+import { provideBasket } from "@/store/basketState"; // Import provideBasket
+import HotelSearch from "@/components/HotelSearch.vue";
+import Menu from "@/components/Menu.vue";
+
+export default defineComponent({
+  components: {
+    HotelSearch,
+    Menu,
+  },
+  setup() {
+    provideBasket(); // Call provideBasket to provide the basket context to child components
+
+    return {};
+  },
+});
 </script>
 
 <template>
@@ -13,6 +27,5 @@ import Menu from "./components/Menu.vue";
 </template>
 
 <style scoped>
-
-
+/* Your styles here */
 </style>

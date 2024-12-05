@@ -10,25 +10,49 @@ export default defineComponent({
   },
   setup() {
     const selectedDates = ref<[Date, Date]>([new Date(), new Date()]);
+    const selectedDetails = ref({
+      guests: { adults: 2, children: 0 }, // Default to 2 adults and 0 children
+      rooms: 1, // Default to 1 room
+    });
 
     const updateDates = (dates: [Date, Date]) => {
       selectedDates.value = dates;
     };
 
+    const updateDetails = (details: {
+      guests: { adults: number; children: number };
+      rooms: number;
+    }) => {
+      selectedDetails.value = details;
+    };
+
     return {
       selectedDates,
+      selectedDetails,
       updateDates,
+      updateDetails,
     };
   },
 });
 </script>
 
 <template>
-  <main class="main-container"></main>
-  <div>
-    <Datepicker @update-dates="updateDates" class="margin"/>
-    <HotelCard :location="'Bangkok'" :selectedDates="selectedDates" class="margin"/>
-  </div>
+  <main class="main-container">
+    
+  </main>
+  <div><Datepicker
+      :selectedDates="selectedDates"
+      :selectedDetails="selectedDetails"
+      @update-dates="updateDates"
+      @update-details="updateDetails"
+      class="margin"
+    />
+    <HotelCard
+      :location="'Bangkok'"
+      :selectedDates="selectedDates"
+      :selectedDetails="selectedDetails"
+      class="margin"
+    /></div>
 </template>
 
 <style scoped>

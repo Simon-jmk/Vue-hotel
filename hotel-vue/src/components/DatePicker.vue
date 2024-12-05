@@ -74,21 +74,24 @@ import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css"; // import the css file
 
 export default defineComponent({
-  name: "HotelSearch",
+  name: "DatePicker",
   components: {
     Datepicker,
   },
-  setup(_, { emit }) {
-    // Set default dates for the range (start and end dates)
-    const currentDate = new Date();
-    const defaultStartDate = new Date(currentDate);
-    defaultStartDate.setDate(currentDate.getDate() + 1); // default start date to tomorrow
-    const defaultEndDate = new Date(currentDate);
-    defaultEndDate.setDate(currentDate.getDate() + 2); // default end date to the day after tomorrow
-
-    const dates = ref<[Date, Date]>([defaultStartDate, defaultEndDate]);
-    const guests = ref({ adults: 2, children: 0 });
-    const rooms = ref(1);
+  props: {
+    selectedDates: {
+      type: Array,
+      required: true,
+    },
+    selectedDetails: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const dates = ref<[Date, Date]>(props.selectedDates as [Date, Date]);
+    const guests = ref(props.selectedDetails.guests);
+    const rooms = ref(props.selectedDetails.rooms);
     const isDropdownOpen = ref(false);
 
     const guestSummary = computed(() => {
@@ -114,17 +117,18 @@ export default defineComponent({
     };
 
     const handleSubmit = () => {
-      console.log("Start Date:", dates.value);
-      console.log("End Date:", dates.value);
-      console.log("Guests:", guests.value);
-      console.log("Rooms:", rooms.value);
       emit("update-dates", dates.value);
+      emit("update-details", { guests: guests.value, rooms: rooms.value });
     };
 
-    // Watch for changes in selected dates and update price accordingly
+    // Watch for changes in selected dates and update accordingly
     watch(dates, () => {
-      emit("update-dates", dates.value); // Ensure the parent component gets the updated dates
+      emit("update-dates", dates.value);
     });
+
+    watch([guests, rooms], () => {
+      emit("update-details", { guests: guests.value, rooms: rooms.value });
+    }, { deep: true });
 
     return {
       dates,

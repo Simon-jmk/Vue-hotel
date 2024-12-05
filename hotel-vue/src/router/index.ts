@@ -28,7 +28,7 @@ const routes = [
   },
   {
     path: '/cart',
-    name: 'cart',
+    name: 'basket',
     component: Basket,
   },
 ];

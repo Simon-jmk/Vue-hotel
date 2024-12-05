@@ -10,6 +10,9 @@ export default defineComponent({
   },
   setup() {
     const selectedDates = ref<[Date, Date]>([new Date(), new Date()]);
+    const selectedGuests = ref<number>(2); // Default to 2 guests
+    const selectedKids = ref<number>(0); // Default to 0 kids
+    const selectedRooms = ref<number>(1); // Default to 1 room
 
     const updateDates = (dates: [Date, Date]) => {
       selectedDates.value = dates;
@@ -17,6 +20,9 @@ export default defineComponent({
 
     return {
       selectedDates,
+      selectedGuests,
+      selectedKids,
+      selectedRooms,
       updateDates,
     };
   },
@@ -26,8 +32,15 @@ export default defineComponent({
 <template>
   <main class="main-container"></main>
   <div>
-    <Datepicker @update-dates="updateDates"  class="margin"/>
-    <HotelCard :location="'Pattaya'" :selectedDates="selectedDates"  class="margin" />
+    <Datepicker @update-dates="updateDates" class="margin" />
+    <HotelCard
+      :location="'Pattaya'"
+      :selectedDates="selectedDates"
+      :selectedGuests="selectedGuests"
+      :selectedKids="selectedKids"
+      :selectedRooms="selectedRooms"
+      class="margin"
+    />
   </div>
 </template>
 

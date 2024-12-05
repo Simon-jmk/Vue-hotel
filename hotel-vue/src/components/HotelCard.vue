@@ -1,9 +1,7 @@
 <template>
-  <div class="hotel-cards">
-    <div v-if="filteredHotels && filteredHotels.length === 0">
-      <p>Inga hotell hittades för denna plats.</p>
-    </div>
-    <div v-else>
+  <div>
+    <h2>{{ location || 'No Location' }} Hotels</h2>
+    <div v-if="filteredHotels.length > 0">
       <div v-for="hotel in filteredHotels" :key="hotel.id" class="hotel-card">
         <div class="image-container">
           <img :src="hotel.image" :alt="hotel.name" />
@@ -35,31 +33,15 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <p>Inga hotell hittades för denna plats.</p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch } from "vue";
-
-export interface Hotel {
-  id: number;
-  image: string;
-  name: string;
-  description: string;
-  pricePerNight: number;
-  contact: string;
-}
-
-export interface Location {
-  city: string;
-  hotels: Hotel[];
-}
-
-export interface Option {
-  name: string;
-  description: string;
-  price: number;
-}
+import { useBasket } from "@/store/basketState";
 
 export default defineComponent({
   name: "HotelCard",
@@ -72,70 +54,18 @@ export default defineComponent({
       type: Array,
       required: true,
     },
-  },
-  data() {
-    return {
-      hotels: [] as Hotel[],
-      allLocations: [] as Location[],
-      cart: [] as { hotel: Hotel; option: Option }[],
-      datesExplicitlySelected: false, // Flag to track if dates have been explicitly selected
-    };
-  },
-  computed: {
-    filteredHotels(): Hotel[] {
-      if (!this.allLocations || this.allLocations.length === 0) {
-        return [];
-      }
-      const locationData = this.allLocations.find(
-        (loc) => loc.city.toLowerCase() === this.location.toLowerCase()
-      );
-      return locationData ? locationData.hotels : [];
+    selectedDetails: {
+      type: Object,
+      required: true,
     },
+  },
+  setup(props) {
+    const basket = useBasket(); // Injecting the basket from the parent
+    const hotels = ref<any[]>([]); // For storing hotels filtered by location
+    const allLocations = ref<any[]>([]); // All available locations with hotels
+    const datesExplicitlySelected = ref(false);
 
-    numberOfNights(): number {
-      if (this.selectedDates && this.selectedDates.length === 2) {
-        const [start, end] = this.selectedDates as [Date, Date];
-        const diffTime = end.getTime() - start.getTime();
-        return Math.ceil(diffTime / (1000 * 3600 * 24));
-      }
-      return 1;
-    },
-
-    datesSelected(): boolean {
-      return (
-        this.selectedDates &&
-        this.selectedDates.length === 2 &&
-        this.selectedDates[0] instanceof Date &&
-        this.selectedDates[1] instanceof Date
-      );
-    },
-  },
-  methods: {
-    hotelOptions(basePrice: number): Option[] {
-      return [
-        {
-          name: "Standard",
-          description: "Standardrum utan extra tillval.",
-          price: basePrice,
-        },
-        {
-          name: "Gold",
-          description: "10% rabatt på baren + gratis frukost.",
-          price: basePrice * 1.2,
-        },
-        {
-          name: "Platinum",
-          description: "Upphämtning från flygplats + all inclusive.",
-          price: basePrice * 1.5,
-        },
-      ];
-    },
-    addToCart(hotel: Hotel, option: Option) {
-      this.cart.push({ hotel, option });
-      alert(`${option.name} för ${hotel.name} har lagts till i kundvagnen!`);
-    },
-  },
-  created() {
+    // Fetch hotel data on component mount
     fetch("/data/hotel.json")
       .then((response) => {
         if (!response.ok) {
@@ -144,21 +74,83 @@ export default defineComponent({
         return response.json();
       })
       .then((data) => {
-        this.allLocations = data.locations as Location[];
+        allLocations.value = data.locations; // Assuming 'locations' is part of the JSON
       })
       .catch((error) => {
         console.error("Kunde inte ladda hotellinformationen:", error);
       });
-  },
-  watch: {
-    selectedDates: {
-      handler() {
-        // Trigger recomputation of numberOfNights when selectedDates change
-        this.numberOfNights;
-        this.datesExplicitlySelected = true; // Set the flag to true when dates are explicitly selected
+
+    // Computed property to filter hotels based on the location passed in props
+    const filteredHotels = computed(() => {
+      if (!props.location || typeof props.location !== 'string') {
+        return [];
+      }
+      const locationData = allLocations.value.find(
+        (loc) => loc.city.toLowerCase() === props.location.toLowerCase()
+      );
+      return locationData ? locationData.hotels : [];
+    });
+
+    // Compute the number of nights based on selected dates
+    const numberOfNights = computed(() => {
+      if (props.selectedDates && props.selectedDates.length === 2) {
+        const [start, end] = props.selectedDates as [Date, Date];
+        const diffTime = end.getTime() - start.getTime();
+        return Math.ceil(diffTime / (1000 * 3600 * 24));
+      }
+      return 1; // Default to 1 night if dates are not selected correctly
+    });
+
+    // Define hotel options based on base price (e.g., Standard, Gold, Platinum)
+    const hotelOptions = (basePrice: number) => [
+      {
+        name: "Standard",
+        description: "Standardrum utan extra tillval.",
+        price: basePrice,
       },
-      deep: true,
-    },
+      {
+        name: "Gold",
+        description: "10% rabatt på baren + gratis frukost.",
+        price: basePrice * 1.2,
+      },
+      {
+        name: "Platinum",
+        description: "Upphämtning från flygplats + all inclusive.",
+        price: basePrice * 1.5,
+      },
+    ];
+
+    // Add selected hotel and option to the basket
+    const addToCart = (hotel: any, option: any) => {
+      const totalAmount = option.price * numberOfNights.value;
+      basket.value.push({
+        hotel,
+        option,
+        guests: props.selectedDetails.guests,
+        kids: props.selectedDetails.kids,
+        rooms: props.selectedDetails.rooms,
+        dates: props.selectedDates as [Date, Date], // Type assertion
+        totalAmount,
+      });
+      alert(`${option.name} för ${hotel.name} har lagts till i kundvagnen!`);
+    };
+
+    // Watch for changes in selected dates and set flag accordingly
+    watch(
+      () => props.selectedDates,
+      () => {
+        datesExplicitlySelected.value = true;
+      },
+      { deep: true }
+    );
+
+    return {
+      filteredHotels,
+      numberOfNights,
+      hotelOptions,
+      addToCart,
+      datesExplicitlySelected,
+    };
   },
 });
 </script>
