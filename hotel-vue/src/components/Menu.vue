@@ -29,6 +29,7 @@
 .menu li {
   display: flex;
   margin: 0 1rem;
+  
 }
 
 .menu li a {
@@ -36,6 +37,7 @@
   color: #333;
   font-size: 16px;
   padding: 10px;
+  font-size: smaller;
 }
 
 .menu li a:hover {
@@ -49,6 +51,32 @@
 
 .menu li.right {
   margin-left: auto;
+}
+
+@media screen and (max-width: 920px) {
+  .menu-container {
+    padding: 10px 0;
+  }
+  .menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 0 auto;
+
+  }
+
+  .menu li {
+    margin: 0;
+    max-width: 2.5rem;
+  }
+
+  .menu li.left {
+    margin-right: 0;
+  }
+
+  .menu li.right {
+    margin-left: 0;
+  }
 }
 
 </style>

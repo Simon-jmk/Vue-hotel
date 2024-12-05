@@ -1,5 +1,27 @@
+<template>
+  <main class="main-container">
+    <Article :location="'Bangkok'" />
+  </main>
+  <div>
+    <Datepicker
+      :selectedDates="selectedDates"
+      :selectedDetails="selectedDetails"
+      @update-dates="updateDates"
+      @update-details="updateDetails"
+      class="margin"
+    />
+    <HotelCard
+      :location="'Bangkok'"
+      :selectedDates="selectedDates"
+      :selectedDetails="selectedDetails"
+      class="margin"
+    />
+  </div>
+</template>
+
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import Datepicker from "@/components/DatePicker.vue";
 import HotelCard from "@/components/HotelCard.vue";
 import Article from "@/components/Article.vue";
@@ -11,20 +33,34 @@ export default defineComponent({
     Article,
   },
   setup() {
+    const route = useRoute();
     const selectedDates = ref<[Date, Date]>([new Date(), new Date()]);
     const selectedDetails = ref({
-      guests: { adults: 2, children: 0 }, // Default to 2 adults and 0 children
-      rooms: 1, // Default to 1 room
+      guests: { adults: 2, children: 0 },
+      rooms: 1,
+    });
+
+    onMounted(() => {
+      const { startDate, endDate, adults, children, rooms } = route.query;
+      if (startDate && endDate) {
+        selectedDates.value = [new Date(startDate as string), new Date(endDate as string)];
+      }
+      if (adults) {
+        selectedDetails.value.guests.adults = parseInt(adults as string, 10);
+      }
+      if (children) {
+        selectedDetails.value.guests.children = parseInt(children as string, 10);
+      }
+      if (rooms) {
+        selectedDetails.value.rooms = parseInt(rooms as string, 10);
+      }
     });
 
     const updateDates = (dates: [Date, Date]) => {
       selectedDates.value = dates;
     };
 
-    const updateDetails = (details: {
-      guests: { adults: number; children: number };
-      rooms: number;
-    }) => {
+    const updateDetails = (details: { guests: { adults: number; children: number }; rooms: number }) => {
       selectedDetails.value = details;
     };
 
@@ -37,27 +73,6 @@ export default defineComponent({
   },
 });
 </script>
-
-<template>
-  <main class="main-container">
-    <Article :location="'Bangkok'" />
-    
-  </main>
-  <div><Datepicker
-      :selectedDates="selectedDates"
-      :selectedDetails="selectedDetails"
-      @update-dates="updateDates"
-      @update-details="updateDetails"
-      class="margin"
-    />
-    <HotelCard
-      :location="'Bangkok'"
-      :selectedDates="selectedDates"
-      :selectedDetails="selectedDetails"
-      class="margin"
-    /></div>
-</template>
-
 <style scoped>
 .main-container {
   background-image: url("https://plus.unsplash.com/premium_photo-1661963188068-1bac46e28727?q=80&w=2671&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); /* Set the background image */

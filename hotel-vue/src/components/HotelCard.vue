@@ -1,7 +1,6 @@
 <template>
-  <div class="mainer">
-    <h2>{{ location || 'No Location' }} Hotels:</h2>
-    <div v-if="filteredHotels.length > 0">
+  <div >
+    <div v-if="filteredHotels.length" class="hotel-container">
       <div v-for="hotel in filteredHotels" :key="hotel.id" class="hotel-card">
         <div class="image-container">
           <img :src="hotel.image" :alt="hotel.name" />
@@ -27,7 +26,7 @@
               @click="addToCart(hotel, option)"
               :disabled="!datesExplicitlySelected"
             >
-              Lägg till i kundvagnen
+              Köp
             </button>
           </div>
         </div>
@@ -35,13 +34,24 @@
     </div>
     <div v-else>
       <p>Inga hotell hittades för denna plats.</p>
+      <p>Kontrollera att JSON-filen innehåller rätt data och att platsen är korrekt.</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch } from "vue";
-import { useBasket } from "@/store/basketState";
+import { useBasketStore } from "../store/basket";
+
+export interface Hotel {
+  id: number;
+  name: string;
+  description: string;
+  pricePerNight: number;
+  contact: string;
+  image: string;
+  location: string;
+}
 
 export default defineComponent({
   name: "HotelCard",
@@ -51,7 +61,7 @@ export default defineComponent({
       required: true,
     },
     selectedDates: {
-      type: Array,
+      type: Array as () => Date[],
       required: true,
     },
     selectedDetails: {
@@ -60,12 +70,73 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const basket = useBasket(); // Injecting the basket from the parent
-    const hotels = ref<any[]>([]); // For storing hotels filtered by location
-    const allLocations = ref<any[]>([]); // All available locations with hotels
+    const basketStore = useBasketStore(); // Use the Pinia store
+
+    const hotels = ref<Hotel[]>([]); // Initialize as an empty array
     const datesExplicitlySelected = ref(false);
 
-    // Fetch hotel data on component mount
+    const numberOfNights = computed(() => {
+      if (props.selectedDates.length === 2) {
+        const [start, end] = props.selectedDates;
+        const diffTime = Math.abs(end.getTime() - start.getTime());
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      }
+      return 0;
+    });
+
+    const filteredHotels = computed(() => {
+      const filtered = hotels.value.filter(hotel => hotel.location === props.location);
+      console.log("Filtered hotels:", filtered); // Debugging information
+      return filtered;
+    });
+
+    const hotelOptions = (pricePerNight: number) => {
+      return [
+        {
+          name: "Standard",
+          description: "Standard room",
+          price: pricePerNight,
+        },
+        {
+          name: "Deluxe",
+          description: "Deluxe room",
+          price: pricePerNight * 1.5,
+        },
+        {
+          name: "Suite",
+          description: "Suite room",
+          price: pricePerNight * 2,
+        },
+      ];
+    };
+
+    const addToCart = (hotel: Hotel, option: { name: string; description: string; price: number }) => {
+      const item = {
+        hotel: {
+          name: hotel.name,
+          image: hotel.image,
+        },
+        option: {
+          name: option.name,
+          description: option.description,
+          price: option.price,
+        },
+        guests: props.selectedDetails.guests,
+        rooms: props.selectedDetails.rooms,
+        dates: props.selectedDates as [Date, Date], // Ensure this matches the expected type
+        totalAmount: option.price * numberOfNights.value,
+      };
+      basketStore.addItem(item);
+      console.log("Added to cart:", item); // Debugging information
+    };
+
+    watch(
+      () => props.selectedDates,
+      (newDates) => {
+        datesExplicitlySelected.value = newDates.length === 2;
+      }
+    );
+
     fetch("/data/hotel.json")
       .then((response) => {
         if (!response.ok) {
@@ -74,81 +145,24 @@ export default defineComponent({
         return response.json();
       })
       .then((data) => {
-        allLocations.value = data.locations; // Assuming 'locations' is part of the JSON
+        // Flatten the hotels array from all locations
+        hotels.value = data.locations.flatMap((location: { hotels: Hotel[] }) => location.hotels) || [];
+        console.log("Fetched hotels:", hotels.value); // Debugging information
       })
       .catch((error) => {
         console.error("Kunde inte ladda hotellinformationen:", error);
       });
 
-    // Computed property to filter hotels based on the location passed in props
-    const filteredHotels = computed(() => {
-      if (!props.location || typeof props.location !== 'string') {
-        return [];
-      }
-      const locationData = allLocations.value.find(
-        (loc) => loc.city.toLowerCase() === props.location.toLowerCase()
-      );
-      return locationData ? locationData.hotels : [];
-    });
-
-    // Compute the number of nights based on selected dates
-    const numberOfNights = computed(() => {
-      if (props.selectedDates && props.selectedDates.length === 2) {
-        const [start, end] = props.selectedDates as [Date, Date];
-        const diffTime = end.getTime() - start.getTime();
-        return Math.ceil(diffTime / (1000 * 3600 * 24));
-      }
-      return 1; // Default to 1 night if dates are not selected correctly
-    });
-
-    // Define hotel options based on base price (e.g., Standard, Gold, Platinum)
-    const hotelOptions = (basePrice: number) => [
-      {
-        name: "Standard",
-        description: "Standardrum utan extra tillval.",
-        price: basePrice,
-      },
-      {
-        name: "Gold",
-        description: "10% rabatt på baren + gratis frukost.",
-        price: basePrice * 1.2,
-      },
-      {
-        name: "Platinum",
-        description: "Upphämtning från flygplats + all inclusive.",
-        price: basePrice * 1.5,
-      },
-    ];
-
-    // Add selected hotel and option to the basket
-    const addToCart = (hotel: any, option: any) => {
-      const totalAmount = option.price * numberOfNights.value;
-      basket.value.push({
-        hotel,
-        option,
-        guests: props.selectedDetails.guests,
-        rooms: props.selectedDetails.rooms,
-        dates: props.selectedDates as [Date, Date], // Type assertion
-        totalAmount,
-      });
-      alert(`${option.name} för ${hotel.name} har lagts till i kundvagnen!`);
-    };
-
-    // Watch for changes in selected dates and set flag accordingly
-    watch(
-      () => props.selectedDates,
-      () => {
-        datesExplicitlySelected.value = true;
-      },
-      { deep: true }
-    );
+    console.log("Location prop:", props.location); // Debugging information
+    console.log("Selected dates prop:", props.selectedDates); // Debugging information
+    console.log("Selected details prop:", props.selectedDetails); // Debugging information
 
     return {
       filteredHotels,
-      numberOfNights,
       hotelOptions,
       addToCart,
       datesExplicitlySelected,
+      numberOfNights,
     };
   },
 });
@@ -162,25 +176,32 @@ export default defineComponent({
 
 .hotel-cards {
   margin: 0 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* Adds spacing between the cards */
+  ;
 }
 
 .hotel-card {
   border-bottom: 1px solid #ccc;
   padding: 1rem;
   padding-bottom: 2rem;
-  margin: 1rem 0;
-  display: flex;
+  margin: auto 1rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr 3fr;
+  grid-row: auto;
   align-items: flex-start;
-  width: 100%;
+  justify-content: flex-start;
+
   box-sizing: border-box;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .image-container {
   width: 15rem;
   height: 12rem;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 img {
@@ -193,23 +214,28 @@ img {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  flex-grow: 1;
+  width: 100%;
+  padding-right: 1rem;
+  margin-right: 1rem;
+  font-size: small;
 }
 
 .options {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 2rem;
+  justify-content: flex-end;
+  
 }
 
 .option {
-  width: 10rem;
   gap: 0.5rem;
   height: 100%;
+  width: 6.5rem;
+  margin-right: 0.5rem;
   display: flex;
   flex-direction: column;
   align-content: space-between;
+  font-size: small;
+
 }
 
 button {
@@ -219,6 +245,9 @@ button {
   padding: 0.5rem 1rem;
   cursor: pointer;
   border-radius: 5px;
+  max-width: 4rem;
+  font-size: small;
+  margin-top: 60%;
 }
 
 button:disabled {
@@ -228,5 +257,42 @@ button:disabled {
 
 button:hover:not(:disabled) {
   background-color: #0056b3;
+}
+
+@media screen and (max-width: 920px) {
+  .hotel-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 2rem;
+
+  }
+  .image-container {
+    width: 100%;
+    height: 10rem;
+  }
+
+  .hotel-card {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    border: 1px solid #ccc;
+    border-radius: 2rem;
+    box-shadow: 0rem 0.5rem 2rem #ccc;
+    max-width: 40%;
+    min-width: 21rem;
+    font-size: smaller;
+  }
+  .options {
+    justify-content: flex-start;
+    
+  }
+  .option {
+    max-width: 25%;
+    font-size: x-small;
+}
+  button {
+    font-size: smaller;
+  }
 }
 </style>

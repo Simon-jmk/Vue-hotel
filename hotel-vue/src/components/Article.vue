@@ -69,4 +69,15 @@
     border-radius: 1rem;
     text-align: center;
   }
+  @media screen and (max-width: 920px) {
+    .article-container {
+      position: static;
+      margin: 0 1rem;
+    }
+  
+    .loading {
+      position: static;
+      margin: 0 1rem;
+    }
+  }
   </style>

@@ -1,28 +1,9 @@
 <script setup lang="ts">
-import { ref, type Ref } from "vue";
-import { useBasket } from "@/store/basketState";
-import { formatDate } from "../utils/dateUtils";
+import { ref } from 'vue';
+import { useBasketStore } from '@/store/basket';
+import { formatDate } from '../utils/dateUtils';
 
-interface BasketItem {
-  hotel: {
-    name: string;
-    image: string; 
-  };
-  option: {
-    name: string;
-    description: string;
-    price: number;
-  };
-  guests: {
-    adults: number;
-    children: number;
-  };
-  rooms: number;
-  dates: [Date, Date];
-  totalAmount: number;
-}
-
-const basket = useBasket() as Ref<BasketItem[]>;
+const basketStore = useBasketStore();
 
 const allLocations = ref<any[]>([]); // All available locations with hotels
 
@@ -41,18 +22,18 @@ fetch("/data/hotel.json")
   });
 
 const removeItem = (index: number) => {
-  basket.value.splice(index, 1);
+  basketStore.removeItem(index);
 };
 </script>
 
 <template>
   <div class="basket-container">
     <h2>Din Kundvagn</h2>
-    <div v-if="basket.length === 0" class="empty-basket">
+    <div v-if="basketStore.items.length === 0" class="empty-basket">
       <p>Din kundvagn är tom.</p>
     </div>
     <div v-else>
-      <div v-for="(item, index) in basket" :key="index" class="basket-card">
+      <div v-for="(item, index) in basketStore.items" :key="index" class="basket-card">
         <div class="image-container">
           <img :src="item.hotel.image" :alt="item.hotel.name" />
         </div>
@@ -80,6 +61,7 @@ const removeItem = (index: number) => {
     </div>
   </div>
 </template>
+
 <style scoped>
 .basket-container {
   padding: 2rem;
@@ -88,7 +70,6 @@ const removeItem = (index: number) => {
   align-items: center;
   gap: 2rem;
 }
-
 .basket-card {
   display: flex;
   align-items: stretch;
@@ -101,13 +82,11 @@ const removeItem = (index: number) => {
   max-width: 90dvh;
   position: relative;
 }
-
 .card-content {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
-
 .image-container {
   width: 15rem;
   height: 12rem;
@@ -132,16 +111,13 @@ button {
   border-radius: 5px;
   transition: background-color 0.3s;
 }
-
 button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
-
 button:hover:not(:disabled) {
   background-color: #be0000;
 }
-
 .button-container {
   position: absolute;
   bottom: 2rem;
@@ -149,5 +125,4 @@ button:hover:not(:disabled) {
   display: flex;
   justify-content: flex-end;
 }
-
 </style>

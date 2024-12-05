@@ -1,6 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
-import { provideBasket } from "@/store/basketState"; // Import provideBasket
+import { defineComponent } from "vue";
 import HotelSearch from "@/components/HotelSearch.vue";
 import Menu from "@/components/Menu.vue";
 
@@ -10,8 +9,7 @@ export default defineComponent({
     Menu,
   },
   setup() {
-    provideBasket(); // Call provideBasket to provide the basket context to child components
-
+    // No need to call provideBasket here as Pinia is already set up in main.ts
     return {};
   },
 });

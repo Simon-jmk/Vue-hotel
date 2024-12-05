@@ -67,11 +67,10 @@ export default defineComponent({
       console.log("Guests:", details.value.guests);
       console.log("Rooms:", details.value.rooms);
 
-      // Add parameters to the URL
+      // Add parameters to the URL and navigate to the correct view
       router.push({
-        path: "/search",
+        path: `/${destination.value.toLowerCase()}`,
         query: {
-          destination: destination.value,
           startDate: dates.value[0].toISOString().split('T')[0],
           endDate: dates.value[1].toISOString().split('T')[0],
           adults: details.value.guests.adults,

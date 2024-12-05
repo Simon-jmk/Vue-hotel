@@ -1,49 +1,9 @@
-<script lang="ts">
-import { defineComponent, ref } from "vue";
-import Datepicker from "@/components/DatePicker.vue";
-import HotelCard from "@/components/HotelCard.vue";
-import Article from "@/components/Article.vue";
-
-export default defineComponent({
-  components: {
-    Datepicker,
-    HotelCard,
-    Article,
-  },
-  setup() {
-    const selectedDates = ref<[Date, Date]>([new Date(), new Date()]);
-    const selectedDetails = ref({
-      guests: { adults: 2, children: 0 }, // Default to 2 adults and 0 children
-      rooms: 1, // Default to 1 room
-    });
-
-    const updateDates = (dates: [Date, Date]) => {
-      selectedDates.value = dates;
-    };
-
-    const updateDetails = (details: {
-      guests: { adults: number; children: number };
-      rooms: number;
-    }) => {
-      selectedDetails.value = details;
-    };
-
-    return {
-      selectedDates,
-      selectedDetails,
-      updateDates,
-      updateDetails,
-    };
-  },
-});
-</script>
-
 <template>
   <main class="main-container">
     <Article :location="'Pattaya'" />
-    
   </main>
-  <div><Datepicker
+  <div>
+    <Datepicker
       :selectedDates="selectedDates"
       :selectedDetails="selectedDetails"
       @update-dates="updateDates"
@@ -58,6 +18,61 @@ export default defineComponent({
     />
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent, ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import Datepicker from "@/components/DatePicker.vue";
+import HotelCard from "@/components/HotelCard.vue";
+import Article from "@/components/Article.vue";
+
+export default defineComponent({
+  components: {
+    Datepicker,
+    HotelCard,
+    Article,
+  },
+  setup() {
+    const route = useRoute();
+    const selectedDates = ref<[Date, Date]>([new Date(), new Date()]);
+    const selectedDetails = ref({
+      guests: { adults: 2, children: 0 },
+      rooms: 1,
+    });
+
+    onMounted(() => {
+      const { startDate, endDate, adults, children, rooms } = route.query;
+      if (startDate && endDate) {
+        selectedDates.value = [new Date(startDate as string), new Date(endDate as string)];
+      }
+      if (adults) {
+        selectedDetails.value.guests.adults = parseInt(adults as string, 10);
+      }
+      if (children) {
+        selectedDetails.value.guests.children = parseInt(children as string, 10);
+      }
+      if (rooms) {
+        selectedDetails.value.rooms = parseInt(rooms as string, 10);
+      }
+    });
+
+    const updateDates = (dates: [Date, Date]) => {
+      selectedDates.value = dates;
+    };
+
+    const updateDetails = (details: { guests: { adults: number; children: number }; rooms: number }) => {
+      selectedDetails.value = details;
+    };
+
+    return {
+      selectedDates,
+      selectedDetails,
+      updateDates,
+      updateDetails,
+    };
+  },
+});
+</script>
 
 <style scoped>
 .main-container {

@@ -3,7 +3,6 @@
     <form @submit.prevent="handleSubmit" :class="{'horizontal-form': true, 'wrap-form': wrap}">
       <div class="form-group">
         <label for="dates">Datum</label>
-        <!-- @vuepic/vue-datepicker binding -->
         <Datepicker
           v-model="dates"
           range
@@ -21,7 +20,6 @@
           readonly
           placeholder="2 resenärer, 1 rum"
         />
-        <!-- Dropdown for guest selection -->
         <div v-if="isDropdownOpen" class="dropdown">
           <div class="dropdown-item">
             <label>Vuxna</label>
@@ -69,9 +67,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch } from "vue";
+import { defineComponent, ref, watch, computed } from "vue";
 import Datepicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css"; // import the css file
+import "@vuepic/vue-datepicker/dist/main.css";
 
 export default defineComponent({
   name: "DatePicker",
@@ -126,13 +124,21 @@ export default defineComponent({
     };
 
     // Watch for changes in selected dates and update accordingly
-    watch(dates, () => {
-      emit("update-dates", dates.value);
-    });
+    watch(
+      () => props.selectedDates,
+      (newDates) => {
+        dates.value = newDates as [Date, Date];
+      }
+    );
 
-    watch([guests, rooms], () => {
-      emit("update-details", { guests: guests.value, rooms: rooms.value });
-    }, { deep: true });
+    watch(
+      () => props.selectedDetails,
+      (newDetails) => {
+        guests.value = newDetails.guests;
+        rooms.value = newDetails.rooms;
+      },
+      { deep: true }
+    );
 
     return {
       dates,
@@ -155,9 +161,8 @@ export default defineComponent({
   display: flex;
   gap: 1.5rem;
   justify-content: space-between;
-  width: 100%;
   margin: 0 auto;
-  max-width: 900px;
+  max-width: 700px;
 }
 
 .wrap-form {
@@ -255,5 +260,12 @@ button[type="submit"]:hover {
 
 .done-button:hover {
   background-color: #388e3c;
+}
+
+@media screen and (max-width: 920px) {
+  .horizontal-form {
+    flex-direction: column;
+    width: 21rem;
+  }
 }
 </style>
