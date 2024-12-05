@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h2>{{ location || 'No Location' }} Hotels</h2>
+  <div class="mainer">
+    <h2>{{ location || 'No Location' }} Hotels:</h2>
     <div v-if="filteredHotels.length > 0">
       <div v-for="hotel in filteredHotels" :key="hotel.id" class="hotel-card">
         <div class="image-container">
@@ -127,7 +127,6 @@ export default defineComponent({
         hotel,
         option,
         guests: props.selectedDetails.guests,
-        kids: props.selectedDetails.kids,
         rooms: props.selectedDetails.rooms,
         dates: props.selectedDates as [Date, Date], // Type assertion
         totalAmount,
@@ -156,13 +155,19 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.mainer {
+  margin: 0 3rem;
+  margin-bottom: 5rem;
+}
+
 .hotel-cards {
   margin: 0 2rem;
 }
 
 .hotel-card {
   border-bottom: 1px solid #ccc;
-  padding: 15px;
+  padding: 1rem;
+  padding-bottom: 2rem;
   margin: 1rem 0;
   display: flex;
   align-items: flex-start;

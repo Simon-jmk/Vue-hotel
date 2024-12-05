@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { Ref } from "vue";
+import { ref, type Ref } from "vue";
 import { useBasket } from "@/store/basketState";
 import { formatDate } from "../utils/dateUtils";
 
 interface BasketItem {
   hotel: {
     name: string;
+    image: string; 
   };
   option: {
     name: string;
@@ -23,84 +24,130 @@ interface BasketItem {
 
 const basket = useBasket() as Ref<BasketItem[]>;
 
+const allLocations = ref<any[]>([]); // All available locations with hotels
+
+fetch("/data/hotel.json")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP-fel! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    allLocations.value = data.locations; // Assuming 'locations' is part of the JSON
+  })
+  .catch((error) => {
+    console.error("Kunde inte ladda hotellinformationen:", error);
+  });
+
 const removeItem = (index: number) => {
   basket.value.splice(index, 1);
-};
-
-const clearBasket = () => {
-  basket.value.length = 0;
 };
 </script>
 
 <template>
   <div class="basket-container">
     <h2>Din Kundvagn</h2>
-    <div v-if="basket.length === 0">
+    <div v-if="basket.length === 0" class="empty-basket">
       <p>Din kundvagn är tom.</p>
     </div>
     <div v-else>
-      <ul>
-        <li v-for="(item, index) in basket" :key="index">
-          <p>{{ item.hotel.name }} - {{ item.option.name }}</p>
-          <p>{{ item.option.description }}</p>
-          <p>Pris: {{ Math.round(item.option.price) }} SEK</p>
+      <div v-for="(item, index) in basket" :key="index" class="basket-card">
+        <div class="image-container">
+          <img :src="item.hotel.image" :alt="item.hotel.name" />
+        </div>
+        <div class="card-content">
+          <h2>{{ item.hotel.name }}</h2>
+          <p><strong>Val: </strong>{{ item.option.description }}</p>
           <p>
-            Gäster: {{ item.guests.adults }} vuxna,
+            <strong>Gäster:</strong> {{ item.guests.adults }} vuxna,
             {{ item.guests.children }} barn
           </p>
-          <p>Rum: {{ item.rooms }}</p>
+          <p><strong>Rum:</strong> {{ item.rooms }}</p>
+        </div>
+        <div class="card-content margin-top">
+          <p><strong>Pris per dag:</strong> {{ Math.round(item.option.price) }} SEK</p>
           <p v-if="item.dates && item.dates.length === 2">
-            Datum: {{ formatDate(new Date(item.dates[0])) }} -
+            <strong>Datum:</strong> {{ formatDate(new Date(item.dates[0])) }} -
             {{ formatDate(new Date(item.dates[1])) }}
           </p>
-          <p>Total Amount: {{ item.totalAmount }} SEK</p>
+          <p><strong>Total:</strong> {{ item.totalAmount }} SEK</p>
+        </div>
+        <div class="button-container">
           <button @click="removeItem(index)">Ta bort</button>
-        </li>
-      </ul>
-      <button @click="clearBasket">Töm kundvagnen</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
 <style scoped>
 .basket-container {
   padding: 2rem;
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 }
 
-h2 {
-  margin-bottom: 1rem;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  margin-bottom: 1rem;
-  padding: 1rem;
+.basket-card {
+  display: flex;
+  align-items: stretch;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  gap: 1rem;
+  margin-bottom: 1rem;
+  max-width: 90dvh;
+  position: relative;
 }
 
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.image-container {
+  width: 15rem;
+  height: 12rem;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.margin-top {
+  margin-top: 2.7rem;
+}
 button {
-  background-color: #007bff;
+  background-color: #ff0101;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  height: 2rem;
+  width: 4rem;
   cursor: pointer;
   border-radius: 5px;
-}
-
-button:hover {
-  background-color: #0056b3;
+  transition: background-color 0.3s;
 }
 
 button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+button:hover:not(:disabled) {
+  background-color: #be0000;
+}
+
+.button-container {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
 </style>

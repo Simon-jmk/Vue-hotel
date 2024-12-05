@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="handleSubmit" class="horizontal-form">
+    <form @submit.prevent="handleSubmit" :class="{'horizontal-form': true, 'wrap-form': wrap}">
       <div class="form-group">
         <label for="dates">Datum</label>
         <!-- @vuepic/vue-datepicker binding -->
@@ -87,6 +87,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    wrap: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props, { emit }) {
     const dates = ref<[Date, Date]>(props.selectedDates as [Date, Date]);
@@ -150,17 +154,20 @@ export default defineComponent({
 .horizontal-form {
   display: flex;
   gap: 1.5rem;
-  flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
   margin: 0 auto;
   max-width: 900px;
 }
 
+.wrap-form {
+  flex-wrap: wrap;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
-  width: 48%;
+  width: 100%;
 }
 
 input {

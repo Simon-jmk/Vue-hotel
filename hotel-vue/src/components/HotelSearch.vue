@@ -3,70 +3,21 @@
     <form @submit.prevent="handleSubmit">
       <div>
         <label for="destination">Vart reser du?</label>
-        <input id="destination" type="text" placeholder="Bangkok, Thailand" />
+        <select id="destination" v-model="destination">
+          <option value="Bangkok">Bangkok</option>
+          <option value="Pattaya">Pattaya</option>
+          <option value="Phuket">Phuket</option>
+        </select>
       </div>
       <div>
-        <label for="dates">Datum</label>
-        <!-- @vuepic/vue-datepicker binding -->
-        <Datepicker
-          v-model="dates"
-          range
-          format="dd MMM"
-          :enable-time-picker="false"
+        <!-- Use DatePicker component -->
+        <DatePicker
+          :selectedDates="dates"
+          :selectedDetails="details"
+          @update-dates="updateDates"
+          @update-details="updateDetails"
+          :wrap="true"
         />
-      </div>
-      <div>
-        <label for="guests">Gäster</label>
-        <input
-          id="guests"
-          type="text"
-          :value="guestSummary"
-          @click="toggleDropdown"
-          readonly
-          placeholder="2 resenärer, 1 rum"
-        />
-        <!-- Dropdown for guest selection -->
-        <div v-if="isDropdownOpen" class="dropdown">
-          <div class="dropdown-item">
-            <label>Vuxna</label>
-            <div class="controls">
-              <button
-                @click="adjustGuests('adults', -1)"
-                :disabled="guests.adults === 1"
-              >
-                -
-              </button>
-              <span>{{ guests.adults }}</span>
-              <button @click="adjustGuests('adults', 1)">+</button>
-            </div>
-          </div>
-          <div class="dropdown-item">
-            <label>Barn</label>
-            <div class="controls">
-              <button
-                @click="adjustGuests('children', -1)"
-                :disabled="guests.children === 0"
-              >
-                -
-              </button>
-              <span>{{ guests.children }}</span>
-              <button @click="adjustGuests('children', 1)">+</button>
-            </div>
-          </div>
-          <div class="dropdown-item">
-            <label>Rum</label>
-            <div class="controls">
-              <button @click="adjustRooms(-1)" :disabled="rooms === 1">
-                -
-              </button>
-              <span>{{ rooms }}</span>
-              <button @click="adjustRooms(1)">+</button>
-            </div>
-          </div>
-          <div class="dropdown-item">
-            <button @click="toggleDropdown" class="done-button">Done</button>
-          </div>
-        </div>
       </div>
       <button type="submit">Sök</button>
     </form>
@@ -74,75 +25,68 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
-import Datepicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css"; // import the css file
+import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
+import DatePicker from "@/components/DatePicker.vue";
 
 export default defineComponent({
   name: "HotelSearch",
   components: {
-    Datepicker,
+    DatePicker,
   },
-  setup() {
-    // Set default dates for the range (start and end dates)
-    const currentDate = new Date();
-    const defaultStartDate = new Date(currentDate);
-    defaultStartDate.setDate(currentDate.getDate() + 1); // default start date to tomorrow
-    const defaultEndDate = new Date(currentDate);
-    defaultEndDate.setDate(currentDate.getDate() + 2); // default end date to the day after tomorrow
+  props: {
+    selectedDates: {
+      type: Array,
+      required: true,
+    },
+    selectedDetails: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const router = useRouter();
+    const dates = ref<[Date, Date]>(props.selectedDates as [Date, Date]);
+    const details = ref(props.selectedDetails);
+    const destination = ref("Bangkok");
 
-    const dates = ref<[Date, Date]>([
-      defaultStartDate,
-      defaultEndDate,
-    ]);
-
-    const guests = ref({ adults: 2, children: 0 });
-    const rooms = ref(1);
-    const isDropdownOpen = ref(false);
-
-    const guestSummary = computed(() => {
-      return `${guests.value.adults + guests.value.children} resenärer, ${
-        rooms.value
-      } rum`;
-    });
-
-    const startYear = 2023; // Example start year
-    const endYear = 2030; // Example end year
-
-    const toggleDropdown = () => {
-      isDropdownOpen.value = !isDropdownOpen.value;
+    const updateDates = (newDates: [Date, Date]) => {
+      dates.value = newDates;
+      emit("update-dates", newDates);
     };
 
-    const adjustGuests = (type: "adults" | "children", delta: number) => {
-      if (guests.value[type] + delta >= 0) {
-        guests.value[type] += delta;
-      }
-    };
-
-    const adjustRooms = (delta: number) => {
-      if (rooms.value + delta >= 1) {
-        rooms.value += delta;
-      }
+    const updateDetails = (newDetails: { guests: { adults: number; children: number }; rooms: number }) => {
+      details.value = newDetails;
+      emit("update-details", newDetails);
     };
 
     const handleSubmit = () => {
+      console.log("Destination:", destination.value);
       console.log("Start Date:", dates.value[0]);
       console.log("End Date:", dates.value[1]);
-      console.log("Guests:", guests.value);
-      console.log("Rooms:", rooms.value);
+      console.log("Guests:", details.value.guests);
+      console.log("Rooms:", details.value.rooms);
+
+      // Add parameters to the URL
+      router.push({
+        path: "/search",
+        query: {
+          destination: destination.value,
+          startDate: dates.value[0].toISOString().split('T')[0],
+          endDate: dates.value[1].toISOString().split('T')[0],
+          adults: details.value.guests.adults,
+          children: details.value.guests.children,
+          rooms: details.value.rooms,
+        },
+      });
     };
 
     return {
       dates,
-      guests,
-      rooms,
-      isDropdownOpen,
-      guestSummary,
-      startYear,
-      endYear,
-      toggleDropdown,
-      adjustGuests,
-      adjustRooms,
+      details,
+      destination,
+      updateDates,
+      updateDetails,
       handleSubmit,
     };
   },
@@ -226,7 +170,7 @@ form {
 }
 
 /* Input field styling */
-input {
+input, select {
   padding: 0.55rem;
   font-size: 1rem;
   border: 1px solid #ccc;

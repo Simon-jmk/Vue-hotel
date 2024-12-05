@@ -1,131 +1,129 @@
 {
-    "locations": [
-      {
-        "city": "Bangkok",
-        "description": "Huvudstaden i Thailand, känd för sin livliga atmosfär, kultur och moderna attraktioner.",
-        "hotels": [
-          {
-            "id": 1,
-            "name": "La Petite Salil Sukhumvit 11",
-            "description": "En lyxig anläggning i centrum av Bangkok.",
-            "image": "https://images.trvl-media.com/lodging/6000000/5320000/5311800/5311733/6428b678.jpg?impolicy=resizecrop&rw=1200&ra=fit",
-            "pricePerNight": 150,
-            "amenities": ["WiFi", "Pool", "Frukost", "Spa"],
-            "rating": 4.5,
-            "location": "Bangkok",
-            "availableRooms": 12,
-            "contact": "info@bangkokgrandhotel.com"
-          },
-          {
-            "id": 2,
-            "name": "Maimi Hotel",
-            "description": "Hotellet erbjuder fantastisk utsikt över Bangkok skyline.",
-            "image": "https://images.trvl-media.com/lodging/5000000/4710000/4705600/4705552/90275346.jpg?impolicy=resizecrop&rw=1200&ra=fit",
-            "pricePerNight": 120,
-            "amenities": ["WiFi", "Gym", "Frukost"],
-            "rating": 4.0,
-            "location": "Bangkok",
-            "availableRooms": 10,
-            "contact": "contact@siamtower.com"
-          },
-          {
-            "id": 3,
-            "name": "Icon Hotel",
-            "description": "En lugn oas vid floden Chao Phraya.",
-            "image": "https://images.trvl-media.com/lodging/9000000/8100000/8097000/8096911/d198a72e.jpg?impolicy=resizecrop&rw=1200&ra=fit",
-            "pricePerNight": 180,
-            "amenities": ["Pool", "Frukost", "Bar", "Utsikt"],
-            "rating": 4.7,
-            "location": "Bangkok",
-            "availableRooms": 8,
-            "contact": "booking@chaophrayaresort.com"
-          }
-        ]
-      },
-      {
-        "city": "Pattaya",
-        "description": "Känd för sina stränder, nattliv och vattensporter.",
-        "hotels": [
-          {
-            "id": 4,
-            "name": "Pattaya Beach Hotel",
-            "description": "Ett strandnära hotell med alla bekvämligheter.",
-            "image": "https://www.furama.com/images/about-hotel-img-fxpp.jpg",
-            "pricePerNight": 130,
-            "amenities": ["WiFi", "Beachfront", "Frukost", "Restaurang"],
-            "rating": 4.3,
-            "location": "Pattaya",
-            "availableRooms": 15,
-            "contact": "reservations@pattayabeachhotel.com"
-          },
-          {
-            "id": 5,
-            "name": "Royal Pattaya Resort",
-            "description": "En exklusiv resort vid havet.",
-            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLOEFrbmkpNRMRCti3lAUhAXC5bdN1BgpEGg&s",
-            "pricePerNight": 160,
-            "amenities": ["Spa", "Gym", "Utsikt"],
-            "rating": 4.8,
-            "location": "Pattaya",
-            "availableRooms": 6,
-            "contact": "info@royalpattayaresort.com"
-          },
-          {
-            "id": 6,
-            "name": "Sunset Bay Resort",
-            "description": "En avkopplande resort med vacker solnedgångsutsikt.",
-            "image": "https://i0.wp.com/thehoteljournal.com/wp-content/uploads/2022/08/best-boutique-hotels-Pattaya-thailand-Rabbit-Resort-2-level-Villas.jpg?resize=798%2C594&ssl=1",
-            "pricePerNight": 140,
-            "amenities": ["Pool", "WiFi", "Restaurang", "Frukost"],
-            "rating": 4.6,
-            "location": "Pattaya",
-            "availableRooms": 20,
-            "contact": "booking@sunsetbayresort.com"
-          }
-        ]
-      },
-      {
-        "city": "Phuket",
-        "description": "En tropisk paradisö känd för sina stränder och lyxiga resorts.",
-        "hotels": [
-          {
-            "id": 7,
-            "name": "Phuket Beachfront Resort",
-            "description": "Ett strandhotell med enastående utsikt och exklusiva faciliteter.",
-            "image": "https://media.cntraveller.com/photos/611bededaac234341a8945f4/4:3/w_2664,h_1998,c_limit/amanpuri-thailand-villa-exterior_high-res_14217-phuket-nov19-pr.jpg",
-            "pricePerNight": 200,
-            "amenities": ["Strand", "Pool", "Spa", "Restaurang"],
-            "rating": 4.9,
-            "location": "Phuket",
-            "availableRooms": 5,
-            "contact": "contact@phuketbeachfrontresort.com"
-          },
-          {
-            "id": 8,
-            "name": "Andaman Sea View Resort",
-            "description": "Resort med fantastisk utsikt över Andamansjön.",
-            "image": "https://images.squarespace-cdn.com/content/v1/52da9677e4b03d314575985a/1578676996437-I7AOFCSWY6GZSSLS5RZF/Phuket+Marriott+Resort+%26+Spa%2C+Merlin+Beach+-+The+Most+Perfect+View+-+Phuket+Hotels+%26+Resorts+with+Best+Views+-+booking.com.jpg",
-            "pricePerNight": 220,
-            "amenities": ["Frukost", "Pool", "Bar", "Gym"],
-            "rating": 5.0,
-            "location": "Phuket",
-            "availableRooms": 10,
-            "contact": "info@andamanseaview.com"
-          },
-          {
-            "id": 9,
-            "name": "Phuket Luxury Villas",
-            "description": "Vackra privata villor med lyxiga bekvämligheter.",
-            "image": "https://images.squarespace-cdn.com/content/v1/52c9f4ebe4b02c7007cdd86a/1711733337021-SXKN923LGDOQ9YA5H5GA/roomandwild_keemala.jpg",
-            "pricePerNight": 320,
-            "amenities": ["Privat pool", "Frukost", "Spa", "Gym"],
-            "rating": 4.7,
-            "location": "Phuket",
-            "availableRooms": 3,
-            "contact": "reservations@phuketluxuryvillas.com"
-          }
-        ]
-      }
-    ]
-  }
-  
+  "locations": [
+    {
+      "city": "Bangkok",
+      "cityDescription": "Bangkok, Thailands huvudstad, är en livlig metropol där modernitet möter tradition. Staden är känd för sina gyllene tempel som Wat Arun och Grand Palace. Det är även hem för den enorma Chatuchak-marknaden, där du kan hitta allt från kläder till antikviteter. Bangkok erbjuder fantastisk gatumat som pad thai, mango sticky rice och andra delikatesser. Floden Chao Phraya ger en unik möjlighet att utforska staden via båt, och stadens nattliv är känt för sina takbarer, nattklubbar och nattmarknader, vilket gör den till en stad som aldrig sover.",
+      "hotels": [
+        {
+          "id": 1,
+          "name": "La Petite Salil Sukhumvit 11",
+          "description": "En lyxig anläggning i centrum av Bangkok.",
+          "image": "https://images.trvl-media.com/lodging/6000000/5320000/5311800/5311733/6428b678.jpg?impolicy=resizecrop&rw=1200&ra=fit",
+          "pricePerNight": 450,
+          "amenities": ["WiFi", "Pool", "Frukost", "Spa"],
+          "rating": 4.5,
+          "location": "Bangkok",
+          "availableRooms": 12,
+          "contact": "info@bangkokgrandhotel.com"
+        },
+        {
+          "id": 2,
+          "name": "Icon Hotel",
+          "description": "En lugn oas vid floden Chao Phraya.",
+          "image": "https://images.trvl-media.com/lodging/9000000/8100000/8097000/8096911/d198a72e.jpg?impolicy=resizecrop&rw=1200&ra=fit",
+          "pricePerNight": 580,
+          "amenities": ["Pool", "Frukost", "Bar", "Utsikt"],
+          "rating": 4.7,
+          "location": "Bangkok",
+          "availableRooms": 8,
+          "contact": "booking@chaophrayaresort.com"
+        },
+        {
+          "id": 3,
+          "name": "Maimi Hotel",
+          "description": "Hotellet erbjuder fantastisk utsikt över Bangkok skyline.",
+          "image": "https://images.trvl-media.com/lodging/5000000/4710000/4705600/4705552/90275346.jpg?impolicy=resizecrop&rw=1200&ra=fit",
+          "pricePerNight": 620,
+          "amenities": ["WiFi", "Gym", "Frukost"],
+          "rating": 4.0,
+          "location": "Bangkok",
+          "availableRooms": 10,
+          "contact": "contact@siamtower.com"
+        }
+      ]
+    },
+    {
+      "city": "Pattaya","cityDescription": "Pattaya är en livlig strandstad på Thailands östkust, populär för sin energiska atmosfär och breda utbud av aktiviteter. Staden är känd för sina vita sandstränder, vattensporter och möjligheter att utforska närliggande öar som Koh Larn. För den som söker kultur finns även imponerande sevärdheter som Nong Nooch Tropical Garden och Sanctuary of Truth. När kvällen kommer väcks Pattayas berömda Walking Street till liv med ett färgstarkt nattliv, barer, restauranger och underhållning. Pattaya erbjuder något för alla, oavsett om du söker äventyr eller avkoppling.",
+      "hotels": [
+        {
+          "id": 4,
+          "name": "Pattaya Beach Hotel",
+          "description": "Ett strandnära hotell med alla bekvämligheter.",
+          "image": "https://www.furama.com/images/about-hotel-img-fxpp.jpg",
+          "pricePerNight": 430,
+          "amenities": ["WiFi", "Beachfront", "Frukost", "Restaurang"],
+          "rating": 4.3,
+          "location": "Pattaya",
+          "availableRooms": 15,
+          "contact": "reservations@pattayabeachhotel.com"
+        },
+        {
+          "id": 5,
+          "name": "Royal Pattaya Resort",
+          "description": "En exklusiv resort vid havet.",
+          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLOEFrbmkpNRMRCti3lAUhAXC5bdN1BgpEGg&s",
+          "pricePerNight": 560,
+          "amenities": ["Spa", "Gym", "Utsikt"],
+          "rating": 4.8,
+          "location": "Pattaya",
+          "availableRooms": 6,
+          "contact": "info@royalpattayaresort.com"
+        },
+        {
+          "id": 6,
+          "name": "Sunset Bay Resort",
+          "description": "En avkopplande resort med vacker solnedgångsutsikt.",
+          "image": "https://i0.wp.com/thehoteljournal.com/wp-content/uploads/2022/08/best-boutique-hotels-Pattaya-thailand-Rabbit-Resort-2-level-Villas.jpg?resize=798%2C594&ssl=1",
+          "pricePerNight": 640,
+          "amenities": ["Pool", "WiFi", "Restaurang", "Frukost"],
+          "rating": 4.6,
+          "location": "Pattaya",
+          "availableRooms": 20,
+          "contact": "booking@sunsetbayresort.com"
+        }
+      ]
+    },
+    {
+      "city": "Phuket",
+      "cityDescription": "Phuket är Thailands största ö och ett paradis för strandälskare med sitt kristallklara vatten och tropiska landskap. Kända stränder som Patong, Kata och Karon erbjuder både livlig aktivitet och lugnare miljöer. För den som söker kultur är Phuket Old Town och Wat Chalong templet populära besöksmål. Äventyrslystna kan snorkla, dyka eller göra båtturer till de berömda Phi Phi-öarna. På kvällen lockar Phuket med nattmarknader, livemusik och färgstarka shower. Phuket kombinerar naturlig skönhet med rik kultur och ett pulserande nattliv.",
+      "hotels": [
+        {
+          "id": 7,
+          "name": "Phuket Beachfront Resort",
+          "description": "Ett strandhotell med enastående utsikt och exklusiva faciliteter.",
+          "image": "https://media.cntraveller.com/photos/611bededaac234341a8945f4/4:3/w_2664,h_1998,c_limit/amanpuri-thailand-villa-exterior_high-res_14217-phuket-nov19-pr.jpg",
+          "pricePerNight": 400,
+          "amenities": ["Strand", "Pool", "Spa", "Restaurang"],
+          "rating": 4.9,
+          "location": "Phuket",
+          "availableRooms": 5,
+          "contact": "contact@phuketbeachfrontresort.com"
+        },
+        {
+          "id": 8,
+          "name": "Andaman Sea View Resort",
+          "description": "Resort med fantastisk utsikt över Andamansjön.",
+          "image": "https://images.squarespace-cdn.com/content/v1/52da9677e4b03d314575985a/1578676996437-I7AOFCSWY6GZSSLS5RZF/Phuket+Marriott+Resort+%26+Spa%2C+Merlin+Beach+-+The+Most+Perfect+View+-+Phuket+Hotels+%26+Resorts+with+Best+Views+-+booking.com.jpg",
+          "pricePerNight": 520,
+          "amenities": ["Frukost", "Pool", "Bar", "Gym"],
+          "rating": 5.0,
+          "location": "Phuket",
+          "availableRooms": 10,
+          "contact": "info@andamanseaview.com"
+        },
+        {
+          "id": 9,
+          "name": "Phuket Luxury Villas",
+          "description": "Vackra privata villor med lyxiga bekvämligheter.",
+          "image": "https://images.squarespace-cdn.com/content/v1/52c9f4ebe4b02c7007cdd86a/1711733337021-SXKN923LGDOQ9YA5H5GA/roomandwild_keemala.jpg",
+          "pricePerNight": 820,
+          "amenities": ["Privat pool", "Frukost", "Spa", "Gym"],
+          "rating": 4.7,
+          "location": "Phuket",
+          "availableRooms": 3,
+          "contact": "reservations@phuketluxuryvillas.com"
+        }
+      ]
+    }
+  ]
+}

@@ -2,11 +2,13 @@
 import { defineComponent, ref } from "vue";
 import Datepicker from "@/components/DatePicker.vue";
 import HotelCard from "@/components/HotelCard.vue";
+import Article from "@/components/Article.vue";
 
 export default defineComponent({
   components: {
     Datepicker,
     HotelCard,
+    Article,
   },
   setup() {
     const selectedDates = ref<[Date, Date]>([new Date(), new Date()]);
@@ -38,6 +40,7 @@ export default defineComponent({
 
 <template>
   <main class="main-container">
+    <Article :location="'Bangkok'" />
     
   </main>
   <div><Datepicker
@@ -61,13 +64,12 @@ export default defineComponent({
   background-size: cover; /* Ensure the image covers the entire area */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent the image from repeating */
+  position: relative;
   height: 100vh; /* Full height of the viewport */
+  max-height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column; /* Stack the components vertically */
-  gap: 1rem; /* Space between the components */
-  padding: 2rem; /* Add padding around the content */
 }
 
 .margin {

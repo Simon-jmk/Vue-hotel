@@ -2,33 +2,60 @@
 import { defineComponent, ref } from "vue";
 import Datepicker from "@/components/DatePicker.vue";
 import HotelCard from "@/components/HotelCard.vue";
+import Article from "@/components/Article.vue";
 
 export default defineComponent({
   components: {
     Datepicker,
     HotelCard,
+    Article,
   },
   setup() {
     const selectedDates = ref<[Date, Date]>([new Date(), new Date()]);
+    const selectedDetails = ref({
+      guests: { adults: 2, children: 0 }, // Default to 2 adults and 0 children
+      rooms: 1, // Default to 1 room
+    });
 
     const updateDates = (dates: [Date, Date]) => {
       selectedDates.value = dates;
     };
 
+    const updateDetails = (details: {
+      guests: { adults: number; children: number };
+      rooms: number;
+    }) => {
+      selectedDetails.value = details;
+    };
+
     return {
       selectedDates,
+      selectedDetails,
       updateDates,
+      updateDetails,
     };
   },
 });
 </script>
 
 <template>
-  <main class="main-container"></main>
-  <div>
-    <Datepicker @update-dates="updateDates" class="margin" />
-    <HotelCard :location="'Phuket'" :selectedDates="selectedDates" class="margin" />
-  </div>
+  <main class="main-container">
+    <Article :location="'Phuket'" />
+    
+  </main>
+  <div><Datepicker
+      :selectedDates="selectedDates"
+      :selectedDetails="selectedDetails"
+      @update-dates="updateDates"
+      @update-details="updateDetails"
+      class="margin"
+    />
+    <HotelCard
+      :location="'Phuket'"
+      :selectedDates="selectedDates"
+      :selectedDetails="selectedDetails"
+      class="margin"
+    /></div>
 </template>
 
 <style scoped>
@@ -37,13 +64,12 @@ export default defineComponent({
   background-size: cover; /* Ensure the image covers the entire area */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent the image from repeating */
+  position: relative;
   height: 100vh; /* Full height of the viewport */
+  max-height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column; /* Stack the components vertically */
-  gap: 1rem; /* Space between the components */
-  padding: 2rem; /* Add padding around the content */
 }
 
 .margin {
