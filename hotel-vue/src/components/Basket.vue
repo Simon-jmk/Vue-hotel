@@ -79,7 +79,6 @@ const removeItem = (index: number) => {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   gap: 1rem;
   margin-bottom: 1rem;
-  max-width: 90dvh;
   position: relative;
 }
 .card-content {
